@@ -1,4 +1,4 @@
-[README.md](https://github.com/user-attachments/files/29997249/README.md)# Indikator pH Antosianin
+# Indikator pH Antosianin
 
 A single-page camera app that estimates pH from the color of an anthocyanin
 indicator (e.g. red-cabbage extract) and reports whether a food/drink is
