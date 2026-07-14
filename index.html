@@ -6,33 +6,34 @@
 <title>Indikator pH Antosianin</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg: #1c1524;
-    --bg-deep: #140d1a;
-    --card: #271b32;
-    --card-line: #3a2b48;
-    --ink: #f3eef7;
-    --ink-dim: #ab9cbd;
-    --ink-faint: #7a6c8f;
+    --bg: #efe6d3;
+    --bg-deep: #e4d8bd;
+    --card: #f9f4e7;
+    --card-line: #d9c9a6;
+    --ink: #2c2718;
+    --ink-dim: #6f6650;
+    --ink-faint: #a1957a;
 
-    --hue-acid: #d4472b;
-    --hue-mid: #6a3fae;
-    --hue-base: #2765b8;
+    --opal: #3d7e6f;
+    --opal-deep: #285c50;
+    --opal-light: #86bfae;
+    --opal-pale: #d7e9de;
 
-    --verdict-acid: #d4472b;
-    --verdict-ok: #2c9c7a;
-    --verdict-base: #2f6fbf;
+    --verdict-warn: #a85a3d;
+    --verdict-ok: #3d7e6f;
+    --verdict-warn2: #7d5a34;
   }
 
   *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
   html, body{
     margin:0; padding:0;
-    background: radial-gradient(120% 90% at 50% -10%, #2a1d38 0%, var(--bg) 45%, var(--bg-deep) 100%);
+    background: radial-gradient(120% 90% at 50% -10%, #f5efdf 0%, var(--bg) 45%, var(--bg-deep) 100%);
     color: var(--ink);
-    font-family: 'Manrope', sans-serif;
+    font-family: 'Inter', sans-serif;
     min-height: 100dvh;
   }
 
@@ -57,16 +58,16 @@
     font-weight: 700;
   }
   h1{
-    font-family: 'Fraunces', serif;
-    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    font-weight: 800;
     font-size: 24px;
     margin: 2px 0 0;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
   }
   h1 em{
-    font-style: italic;
-    font-weight: 400;
-    background: linear-gradient(90deg, #e0674a, #9a5fd6 55%, #4a86d1);
+    font-style: normal;
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--opal-deep), var(--opal));
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
@@ -87,7 +88,7 @@
     aspect-ratio: 3 / 4;
     border-radius: 20px;
     overflow: hidden;
-    background: #0d0812;
+    background: #1c1812;
     display:flex;
     align-items:center;
     justify-content:center;
@@ -113,8 +114,8 @@
   .reticle span{
     position:absolute;
     width: 26px; height: 26px;
-    border: 2px solid rgba(243,238,247,0.75);
-    opacity: 0.85;
+    border: 2px solid rgba(239,230,211,0.85);
+    opacity: 0.9;
   }
   .reticle .tl{ top:14px; left:14px; border-right:none; border-bottom:none; border-radius: 8px 0 0 0;}
   .reticle .tr{ top:14px; right:14px; border-left:none; border-bottom:none; border-radius: 0 8px 0 0;}
@@ -125,8 +126,8 @@
     position:absolute;
     width: 64px; height:64px;
     border-radius:50%;
-    border: 2px solid rgba(243,238,247,0.9);
-    box-shadow: 0 0 0 2000px rgba(13,8,18,0.28);
+    border: 2px solid rgba(239,230,211,0.95);
+    box-shadow: 0 0 0 2000px rgba(20,16,10,0.28);
     display:none;
   }
 
@@ -167,7 +168,7 @@
     display:block;
     width:100%; height:100%;
     border-radius: 50%;
-    background: linear-gradient(135deg, #e0674a, #9a5fd6 55%, #4a86d1);
+    background: linear-gradient(135deg, var(--opal-light), var(--opal-deep));
   }
   .btn-shutter:active::after{ transform: scale(0.88); }
 
@@ -180,7 +181,7 @@
   .confirm-row.show{ display:flex; }
 
   .pill-btn{
-    font-family:'Manrope', sans-serif;
+    font-family:'Inter', sans-serif;
     font-weight: 700;
     font-size: 13px;
     padding: 12px 20px;
@@ -192,8 +193,8 @@
   }
   .pill-btn.primary{
     border: none;
-    background: linear-gradient(90deg, #e0674a, #9a5fd6 55%, #4a86d1);
-    color: #170f1e;
+    background: linear-gradient(90deg, var(--opal), var(--opal-deep));
+    color: #f9f4e7;
   }
 
   .upload-alt{
@@ -230,15 +231,16 @@
     font-weight: 700;
   }
   .ph-value{
-    font-family:'Fraunces', serif;
+    font-family:'Inter', sans-serif;
     font-size: 44px;
-    font-weight: 500;
+    font-weight: 800;
+    letter-spacing: -0.02em;
     line-height:1;
   }
   .ph-value .unit{
-    font-size: 16px;
+    font-size: 15px;
     color: var(--ink-dim);
-    font-family:'Manrope', sans-serif;
+    font-family:'Inter', sans-serif;
     font-weight: 600;
     margin-left: 4px;
   }
@@ -249,14 +251,20 @@
     height: 10px;
     border-radius: 999px;
     background: linear-gradient(90deg,
-      #d4472b 0%,
-      #c33f66 14%,
-      #9a3fae 28%,
-      #6a3fae 42%,
-      #4a5fc0 57%,
-      #2765b8 71%,
-      #2f8fae 85%,
-      #3fae7a 100%);
+      #f4251e 0%,
+      #e33e3f 7.7%,
+      #8812c8 15.4%,
+      #6609f3 23.1%,
+      #1518cd 30.8%,
+      #1c28fd 38.5%,
+      #019ad2 46.2%,
+      #04afb8 53.8%,
+      #0198a0 61.5%,
+      #00808e 69.2%,
+      #005e5e 76.9%,
+      #014e00 84.6%,
+      #8b6f01 92.3%,
+      #f6c600 100%);
   }
   .strip-ticks{
     display:flex;
@@ -272,8 +280,8 @@
     width: 4px;
     height: 24px;
     border-radius: 3px;
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(28,21,36,0.9), 0 2px 6px rgba(0,0,0,0.4);
+    background: var(--ink);
+    box-shadow: 0 0 0 3px var(--card), 0 2px 6px rgba(44,39,24,0.35);
     left: 42.8%;
     transform: translateX(-50%);
     transition: left 0.5s cubic-bezier(.2,.8,.2,1);
@@ -285,19 +293,20 @@
     border-top: 1px solid var(--card-line);
   }
   .verdict{
-    font-family:'Fraunces', serif;
-    font-size: 19px;
-    font-weight: 500;
+    font-family:'Inter', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
     margin: 6px 0 0;
     padding: 12px 14px;
     border-radius: 14px;
     border-left: 3px solid var(--ink-faint);
-    background: rgba(255,255,255,0.03);
-    transition: border-color 0.3s ease;
+    background: rgba(61,126,111,0.05);
+    transition: border-color 0.3s ease, background 0.3s ease;
   }
-  .verdict.acid{ border-left-color: var(--verdict-acid); }
-  .verdict.ok{ border-left-color: var(--verdict-ok); }
-  .verdict.base{ border-left-color: var(--verdict-base); }
+  .verdict.acid{ border-left-color: var(--verdict-warn); background: rgba(168,90,61,0.08); }
+  .verdict.ok{ border-left-color: var(--verdict-ok); background: rgba(61,126,111,0.1); }
+  .verdict.base{ border-left-color: var(--verdict-warn2); background: rgba(125,90,52,0.08); }
 
   .note{
     font-size: 11px;
@@ -313,7 +322,7 @@
 <div class="app">
 
   <header>
-    <span class="eyebrow">Uji warna antosianin</span>
+    <span class="eyebrow">Indikator antosianin bunga telang</span>
     <h1>Pindai <em>pH</em> alami</h1>
   </header>
 
@@ -359,7 +368,7 @@
       <p class="verdict" id="verdictText">Ambil atau unggah foto untuk memindai warna indikator.</p>
     </div>
 
-    <p class="note">Estimasi berbasis warna indikator antosianin (mis. ekstrak kubis ungu). Hasil bersifat perkiraan, bukan pengukuran laboratorium.</p>
+    <p class="note">Estimasi berbasis warna film indikator polimer bunga telang (BPF-Polymer). Untuk hasil terbaik, foto film indikator di latar polos dengan cahaya yang cukup dan merata — rentang pH 8–11 memiliki warna toska yang berdekatan, jadi sedikit lebih sensitif terhadap pencahayaan. Hasil bersifat perkiraan, bukan pengukuran laboratorium.</p>
   </div>
 
 </div>
@@ -506,22 +515,31 @@
     return { h, s, l };
   }
 
-  // anthocyanin (red-cabbage style) reference chart: hue decreases as pH rises
+  // Reference chart measured from the butterfly pea flower (BPF) polymer film
+  // indicator: red at pH1 -> purple/violet through the acid range -> blue at
+  // pH5-6 -> cyan/teal at pH7-11 -> dark green at pH12 -> olive/gold at pH13-14.
+  // Values sampled directly from the reference chart (average hue per swatch).
   const REF = [
+    { ph: 1,  hue: 362 },
     { ph: 2,  hue: 358 },
-    { ph: 4,  hue: 335 },
-    { ph: 6,  hue: 292 },
-    { ph: 7,  hue: 270 },
-    { ph: 8,  hue: 250 },
-    { ph: 10, hue: 218 },
-    { ph: 12, hue: 172 },
-    { ph: 14, hue: 88  }
+    { ph: 3,  hue: 279 },
+    { ph: 4,  hue: 264 },
+    { ph: 5,  hue: 239 },
+    { ph: 6,  hue: 237 },
+    { ph: 7,  hue: 196 },
+    { ph: 8,  hue: 183 },
+    { ph: 9,  hue: 182 },
+    { ph: 10, hue: 181 },
+    { ph: 11, hue: 180 },
+    { ph: 12, hue: 119 },
+    { ph: 13, hue: 50  },
+    { ph: 14, hue: 40  }
   ];
 
   function hueToPH(hue, sat){
     let h = hue;
-    // treat true reds (near 0) as continuous with the high end of the acid range
-    if(h < 40) h += 360;
+    // treat true reds/magentas (near 0) as continuous with the high end of the acid range
+    if(h < 30) h += 360;
     const clamped = Math.min(Math.max(h, REF[REF.length-1].hue), REF[0].hue);
 
     for(let i = 0; i < REF.length - 1; i++){
@@ -529,8 +547,9 @@
       if(clamped <= a.hue && clamped >= b.hue){
         const t = (a.hue - clamped) / (a.hue - b.hue);
         let ph = a.ph + t * (b.ph - a.ph);
-        // low-saturation samples (washed out / grayish) pull toward neutral, reduces false confidence
-        if(sat < 0.15) ph = ph + (7 - ph) * 0.4;
+        // near-gray samples (e.g. dim lighting, white/neutral background) are unreliable —
+        // pull mildly toward neutral rather than reporting a confident false reading
+        if(sat < 0.08) ph = ph + (7 - ph) * 0.3;
         return Math.round(ph * 10) / 10;
       }
     }
