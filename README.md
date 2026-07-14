@@ -2,7 +2,7 @@
 
 A single-page camera app that estimates pH from the color of an anthocyanin
 indicator (e.g. red-cabbage extract) and reports whether a food/drink is
-safe to consume. Pure static HTML/CSS/JS — no build step needed.
+safe to consume. Pure static HTML/CSS/JS, no build step needed.
 
 ## Deploy to Vercel
 
@@ -32,5 +32,3 @@ static site — no framework config needed.
   color reference chart. It's an approximation, not a lab measurement — for
   best results, photograph the indicator solution against a plain background
   in good, even lighting.
-
-# bioplastic
