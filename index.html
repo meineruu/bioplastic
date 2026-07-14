@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Indikator pH Antosianin</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1c1524;
+    --bg-deep: #140d1a;
+    --card: #271b32;
+    --card-line: #3a2b48;
+    --ink: #f3eef7;
+    --ink-dim: #ab9cbd;
+    --ink-faint: #7a6c8f;
+
+    --hue-acid: #d4472b;
+    --hue-mid: #6a3fae;
+    --hue-base: #2765b8;
+
+    --verdict-acid: #d4472b;
+    --verdict-ok: #2c9c7a;
+    --verdict-base: #2f6fbf;
+  }
+
+  *{ box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body{
+    margin:0; padding:0;
+    background: radial-gradient(120% 90% at 50% -10%, #2a1d38 0%, var(--bg) 45%, var(--bg-deep) 100%);
+    color: var(--ink);
+    font-family: 'Manrope', sans-serif;
+    min-height: 100dvh;
+  }
+
+  .app{
+    max-width: 460px;
+    margin: 0 auto;
+    padding: 22px 18px 40px;
+    min-height: 100dvh;
+  }
+
+  header{
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    margin-bottom: 18px;
+  }
+  .eyebrow{
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 700;
+  }
+  h1{
+    font-family: 'Fraunces', serif;
+    font-weight: 500;
+    font-size: 24px;
+    margin: 2px 0 0;
+    letter-spacing: -0.01em;
+  }
+  h1 em{
+    font-style: italic;
+    font-weight: 400;
+    background: linear-gradient(90deg, #e0674a, #9a5fd6 55%, #4a86d1);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ---------- Scanner card ---------- */
+  .scanner-card{
+    background: var(--card);
+    border: 1px solid var(--card-line);
+    border-radius: 28px;
+    padding: 14px;
+    box-shadow: 0 20px 40px -18px rgba(0,0,0,0.55);
+  }
+
+  .viewfinder{
+    position: relative;
+    width: 100%;
+    aspect-ratio: 3 / 4;
+    border-radius: 20px;
+    overflow: hidden;
+    background: #0d0812;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .viewfinder video,
+  .viewfinder img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display:block;
+  }
+
+  .viewfinder .placeholder{
+    color: var(--ink-faint);
+    font-size: 13px;
+    text-align:center;
+    padding: 0 30px;
+    line-height:1.5;
+  }
+
+  /* reticle corner brackets, lab-lens styling */
+  .reticle span{
+    position:absolute;
+    width: 26px; height: 26px;
+    border: 2px solid rgba(243,238,247,0.75);
+    opacity: 0.85;
+  }
+  .reticle .tl{ top:14px; left:14px; border-right:none; border-bottom:none; border-radius: 8px 0 0 0;}
+  .reticle .tr{ top:14px; right:14px; border-left:none; border-bottom:none; border-radius: 0 8px 0 0;}
+  .reticle .bl{ bottom:14px; left:14px; border-right:none; border-top:none; border-radius: 0 0 0 8px;}
+  .reticle .br{ bottom:14px; right:14px; border-left:none; border-top:none; border-radius: 0 0 8px 0;}
+
+  .sample-ring{
+    position:absolute;
+    width: 64px; height:64px;
+    border-radius:50%;
+    border: 2px solid rgba(243,238,247,0.9);
+    box-shadow: 0 0 0 2000px rgba(13,8,18,0.28);
+    display:none;
+  }
+
+  .scan-status{
+    position:absolute;
+    top: 14px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #fff;
+    background: rgba(13,8,18,0.55);
+    padding: 5px 12px;
+    border-radius: 999px;
+    display:none;
+  }
+
+  /* ---------- controls ---------- */
+  .controls{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap: 18px;
+    padding-top: 16px;
+  }
+
+  .btn-shutter{
+    width: 66px; height: 66px;
+    border-radius: 50%;
+    border: 3px solid var(--ink);
+    background: transparent;
+    padding: 4px;
+    cursor: pointer;
+  }
+  .btn-shutter::after{
+    content:"";
+    display:block;
+    width:100%; height:100%;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e0674a, #9a5fd6 55%, #4a86d1);
+  }
+  .btn-shutter:active::after{ transform: scale(0.88); }
+
+  .confirm-row{
+    display:none;
+    gap: 12px;
+    width:100%;
+    justify-content: center;
+  }
+  .confirm-row.show{ display:flex; }
+
+  .pill-btn{
+    font-family:'Manrope', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    padding: 12px 20px;
+    border-radius: 999px;
+    border: 1px solid var(--card-line);
+    background: rgba(255,255,255,0.03);
+    color: var(--ink);
+    cursor:pointer;
+  }
+  .pill-btn.primary{
+    border: none;
+    background: linear-gradient(90deg, #e0674a, #9a5fd6 55%, #4a86d1);
+    color: #170f1e;
+  }
+
+  .upload-alt{
+    text-align:center;
+    margin-top: 12px;
+  }
+  .upload-alt label{
+    font-size: 12px;
+    color: var(--ink-faint);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+
+  /* ---------- Result card ---------- */
+  .result-card{
+    background: var(--card);
+    border: 1px solid var(--card-line);
+    border-radius: 28px;
+    padding: 22px 20px 24px;
+    margin-top: 16px;
+  }
+
+  .ph-row{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+  }
+  .label{
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    font-weight: 700;
+  }
+  .ph-value{
+    font-family:'Fraunces', serif;
+    font-size: 44px;
+    font-weight: 500;
+    line-height:1;
+  }
+  .ph-value .unit{
+    font-size: 16px;
+    color: var(--ink-dim);
+    font-family:'Manrope', sans-serif;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  .gradient-strip{
+    position: relative;
+    margin-top: 16px;
+    height: 10px;
+    border-radius: 999px;
+    background: linear-gradient(90deg,
+      #d4472b 0%,
+      #c33f66 14%,
+      #9a3fae 28%,
+      #6a3fae 42%,
+      #4a5fc0 57%,
+      #2765b8 71%,
+      #2f8fae 85%,
+      #3fae7a 100%);
+  }
+  .strip-ticks{
+    display:flex;
+    justify-content:space-between;
+    margin-top: 6px;
+    font-size: 10px;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  .marker{
+    position:absolute;
+    top: -7px;
+    width: 4px;
+    height: 24px;
+    border-radius: 3px;
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(28,21,36,0.9), 0 2px 6px rgba(0,0,0,0.4);
+    left: 42.8%;
+    transform: translateX(-50%);
+    transition: left 0.5s cubic-bezier(.2,.8,.2,1);
+  }
+
+  .verdict-block{
+    margin-top: 22px;
+    padding-top: 18px;
+    border-top: 1px solid var(--card-line);
+  }
+  .verdict{
+    font-family:'Fraunces', serif;
+    font-size: 19px;
+    font-weight: 500;
+    margin: 6px 0 0;
+    padding: 12px 14px;
+    border-radius: 14px;
+    border-left: 3px solid var(--ink-faint);
+    background: rgba(255,255,255,0.03);
+    transition: border-color 0.3s ease;
+  }
+  .verdict.acid{ border-left-color: var(--verdict-acid); }
+  .verdict.ok{ border-left-color: var(--verdict-ok); }
+  .verdict.base{ border-left-color: var(--verdict-base); }
+
+  .note{
+    font-size: 11px;
+    color: var(--ink-faint);
+    margin-top: 14px;
+    line-height: 1.5;
+  }
+
+  canvas{ display:none; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header>
+    <span class="eyebrow">Uji warna antosianin</span>
+    <h1>Pindai <em>pH</em> alami</h1>
+  </header>
+
+  <div class="scanner-card">
+    <div class="viewfinder" id="viewfinder">
+      <div class="placeholder" id="placeholder">Mengaktifkan kamera…<br>izinkan akses untuk mulai memindai.</div>
+      <video id="video" autoplay playsinline muted></video>
+      <img id="captured" style="display:none;" alt="Foto yang diambil">
+      <div class="scan-status" id="scanStatus">Sampel diambil</div>
+      <div class="sample-ring" id="sampleRing"></div>
+      <div class="reticle">
+        <span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span>
+      </div>
+    </div>
+
+    <div class="controls">
+      <button class="btn-shutter" id="shootBtn" aria-label="Ambil foto"></button>
+    </div>
+    <div class="confirm-row" id="confirmRow">
+      <button class="pill-btn" id="retakeBtn">Ambil ulang</button>
+      <button class="pill-btn primary" id="confirmBtn">Gunakan foto ini</button>
+    </div>
+
+    <div class="upload-alt">
+      <label for="fileInput">atau unggah foto dari galeri</label>
+      <input type="file" id="fileInput" accept="image/*" capture="environment" style="display:none;">
+    </div>
+  </div>
+
+  <div class="result-card">
+    <div class="ph-row">
+      <span class="label">pH level:</span>
+      <span class="ph-value" id="phValue">–<span class="unit" id="phUnit"></span></span>
+    </div>
+
+    <div class="gradient-strip">
+      <div class="marker" id="marker"></div>
+    </div>
+    <div class="strip-ticks"><span>1</span><span>7</span><span>14</span></div>
+
+    <div class="verdict-block">
+      <span class="label">Kelayakan makanan/minuman:</span>
+      <p class="verdict" id="verdictText">Ambil atau unggah foto untuk memindai warna indikator.</p>
+    </div>
+
+    <p class="note">Estimasi berbasis warna indikator antosianin (mis. ekstrak kubis ungu). Hasil bersifat perkiraan, bukan pengukuran laboratorium.</p>
+  </div>
+
+</div>
+
+<canvas id="canvas"></canvas>
+
+<script>
+(function(){
+  const video = document.getElementById('video');
+  const canvas = document.getElementById('canvas');
+  const captured = document.getElementById('captured');
+  const placeholder = document.getElementById('placeholder');
+  const shootBtn = document.getElementById('shootBtn');
+  const confirmRow = document.getElementById('confirmRow');
+  const retakeBtn = document.getElementById('retakeBtn');
+  const confirmBtn = document.getElementById('confirmBtn');
+  const fileInput = document.getElementById('fileInput');
+  const sampleRing = document.getElementById('sampleRing');
+  const scanStatus = document.getElementById('scanStatus');
+
+  const phValueEl = document.getElementById('phValue');
+  const phUnitEl = document.getElementById('phUnit');
+  const marker = document.getElementById('marker');
+  const verdictText = document.getElementById('verdictText');
+
+  let stream = null;
+  let capturedDataUrl = null;
+
+  async function startCamera(){
+    try{
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: { ideal: 'environment' } },
+        audio: false
+      });
+      video.srcObject = stream;
+      placeholder.style.display = 'none';
+      video.style.display = 'block';
+    }catch(err){
+      placeholder.innerHTML = 'Kamera tidak tersedia.<br>Gunakan tombol unggah foto di bawah.';
+    }
+  }
+  startCamera();
+
+  function showCaptureState(){
+    video.style.display = 'none';
+    captured.style.display = 'block';
+    sampleRing.style.display = 'block';
+    scanStatus.style.display = 'block';
+    shootBtn.parentElement.style.display = 'none';
+    confirmRow.classList.add('show');
+  }
+
+  function showLiveState(){
+    captured.style.display = 'none';
+    sampleRing.style.display = 'none';
+    scanStatus.style.display = 'none';
+    video.style.display = 'block';
+    shootBtn.parentElement.style.display = 'flex';
+    confirmRow.classList.remove('show');
+  }
+
+  function drawFromVideo(){
+    const w = video.videoWidth, h = video.videoHeight;
+    if(!w || !h) return;
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, w, h);
+    capturedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    captured.src = capturedDataUrl;
+    showCaptureState();
+  }
+
+  shootBtn.addEventListener('click', drawFromVideo);
+
+  fileInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = new Image();
+      img.onload = () => {
+        canvas.width = img.width; canvas.height = img.height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0);
+        capturedDataUrl = canvas.toDataURL('image/jpeg', 0.92);
+        captured.src = capturedDataUrl;
+        showCaptureState();
+      };
+      img.src = ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+
+  retakeBtn.addEventListener('click', () => {
+    capturedDataUrl = null;
+    showLiveState();
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    analyzeCapturedColor();
+  });
+
+  // ---------- Color analysis ----------
+
+  function analyzeCapturedColor(){
+    const ctx = canvas.getContext('2d');
+    const w = canvas.width, h = canvas.height;
+    if(!w || !h) return;
+
+    // sample a centered square region, ~30% of the shorter side
+    const size = Math.floor(Math.min(w, h) * 0.3);
+    const sx = Math.floor((w - size) / 2);
+    const sy = Math.floor((h - size) / 2);
+    const data = ctx.getImageData(sx, sy, size, size).data;
+
+    let r = 0, g = 0, b = 0, n = 0;
+    for(let i = 0; i < data.length; i += 4){
+      r += data[i]; g += data[i+1]; b += data[i+2];
+      n++;
+    }
+    r = r / n; g = g / n; b = b / n;
+
+    const hsl = rgbToHsl(r, g, b);
+    const ph = hueToPH(hsl.h, hsl.s);
+    renderResult(ph);
+  }
+
+  function rgbToHsl(r, g, b){
+    r /= 255; g /= 255; b /= 255;
+    const max = Math.max(r,g,b), min = Math.min(r,g,b);
+    let h, s, l = (max + min) / 2;
+    if(max === min){
+      h = 0; s = 0;
+    } else {
+      const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch(max){
+        case r: h = (g - b) / d + (g < b ? 6 : 0); break;
+        case g: h = (b - r) / d + 2; break;
+        default: h = (r - g) / d + 4;
+      }
+      h *= 60;
+    }
+    return { h, s, l };
+  }
+
+  // anthocyanin (red-cabbage style) reference chart: hue decreases as pH rises
+  const REF = [
+    { ph: 2,  hue: 358 },
+    { ph: 4,  hue: 335 },
+    { ph: 6,  hue: 292 },
+    { ph: 7,  hue: 270 },
+    { ph: 8,  hue: 250 },
+    { ph: 10, hue: 218 },
+    { ph: 12, hue: 172 },
+    { ph: 14, hue: 88  }
+  ];
+
+  function hueToPH(hue, sat){
+    let h = hue;
+    // treat true reds (near 0) as continuous with the high end of the acid range
+    if(h < 40) h += 360;
+    const clamped = Math.min(Math.max(h, REF[REF.length-1].hue), REF[0].hue);
+
+    for(let i = 0; i < REF.length - 1; i++){
+      const a = REF[i], b = REF[i+1];
+      if(clamped <= a.hue && clamped >= b.hue){
+        const t = (a.hue - clamped) / (a.hue - b.hue);
+        let ph = a.ph + t * (b.ph - a.ph);
+        // low-saturation samples (washed out / grayish) pull toward neutral, reduces false confidence
+        if(sat < 0.15) ph = ph + (7 - ph) * 0.4;
+        return Math.round(ph * 10) / 10;
+      }
+    }
+    return 7;
+  }
+
+  function verdictFor(ph){
+    if(ph <= 5)   return { text: 'Tidak layak. Terlalu asam.', cls: 'acid' };
+    if(ph < 7.5)  return { text: 'Layak makan/minum.', cls: 'ok' };
+    return { text: 'Tidak layak. Terlalu basa.', cls: 'base' };
+  }
+
+  function renderResult(ph){
+    phValueEl.firstChild.textContent = ph.toFixed(1);
+    phUnitEl.textContent = ' pH';
+
+    const pct = Math.min(Math.max((ph - 1) / (14 - 1), 0), 1) * 100;
+    marker.style.left = pct + '%';
+
+    const v = verdictFor(ph);
+    verdictText.textContent = v.text;
+    verdictText.className = 'verdict ' + v.cls;
+  }
+
+})();
+</script>
+</body>
+</html>
